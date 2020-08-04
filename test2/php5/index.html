@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SQL</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>ข้อ 5.1</h3>
+                <img src="er.jpg" class="img-responsive">
+
+                <hr />
+                <h3>ข้อ 5.2</h3>
+                <p>INSERT INTO `master_programmer`.`branch` (`branch`) VALUES ('เชียงใหม่');</p>
+                <p>INSERT INTO `master_programmer`.`branch` (`branch`) VALUES ('เชียงราย');</p>
+                <p>INSERT INTO `master_programmer`.`branch` (`branch`) VALUES ('ภูเก็ต');</p>
+
+                <hr />
+                <h3>ข้อ 5.3</h3>
+                <p>DELETE FROM `master_programmer`.`position` WHERE (`position` = 'sale');</p>
+                <p>OR</p>
+                <p>DELETE FROM `master_programmer`.`position` WHERE (`position_id` = '1');  // position_id 1 คือ sale </p>
+
+                <hr />
+                <h3>ข้อ 5.4</h3>
+                <p>UPDATE `master_programmer`.`branch` SET `branch` = 'นราธิวาส' WHERE (`branch_id` = '4'); // branch_id 4 คือ ปัตตานี  </p>
+
+                <hr />
+                <h3>ข้อ 5.5</h3>
+                <p>SELECT * FROM master_programmer.employee LIMIT 400;</p>
+
+                <hr />
+                <h3>ข้อ 5.6</h3>
+                <img src="5-6.jpg" class="img-responsive">
+                <p>
+                    SELECT 
+                        emp.*, branch.branch
+                    FROM
+                        master_programmer.employee AS emp
+                            INNER JOIN
+                        master_programmer.employee_branch AS eb ON eb.employee_id = emp.emp_id
+                            INNER JOIN
+                        master_programmer.branch ON branch.branch_id = eb.branch_id
+                    WHERE
+                        branch.branch = 'ระยอง'
+                            OR branch.branch = 'กรุงเทพ'
+                    GROUP BY emp.emp_id;
+                </p>
+
+
+                <hr />
+                <h3>ข้อ 5.7</h3>
+                <img src="5-7.jpg" class="img-responsive">
+                <p>
+                    SELECT 
+                        emp.*, branch.branch, position.position
+                    FROM
+                        master_programmer.employee AS emp
+                            INNER JOIN
+                        master_programmer.employee_branch AS eb ON eb.employee_id = emp.emp_id
+                            INNER JOIN
+                        master_programmer.branch ON branch.branch_id = eb.branch_id
+                                INNER JOIN
+                        master_programmer.employee_position AS ep ON ep.employee_id = emp.emp_id
+                                INNER JOIN
+                        master_programmer.position ON position.position_id = ep.position_id
+                    WHERE
+                        branch.branch = 'เลย' AND position.position = 'programmer'
+                    GROUP BY emp.emp_id;
+                </p>
+
+                <hr />
+                <h3>ข้อ 5.8</h3>
+                <img src="5-8.jpg" class="img-responsive">
+                <p>
+                    SELECT 
+                    employee.*,
+                    (SELECT 
+                            GROUP_CONCAT(branch.branch) branch
+                        FROM
+                            master_programmer.branch
+                                INNER JOIN
+                            master_programmer.employee_branch ON employee_branch.branch_id = branch.branch_id
+                        WHERE
+                            master_programmer.employee_branch.employee_id = employee.emp_id) AS branch,
+                    (SELECT 
+                            GROUP_CONCAT(position.position) AS position
+                        FROM
+                            master_programmer.position
+                                INNER JOIN
+                            master_programmer.employee_position ON master_programmer.employee_position.position_id = master_programmer.position.position_id
+                        WHERE
+                            master_programmer.employee_position.employee_id = employee.emp_id) AS position
+                    FROM
+                        master_programmer.employee;
+                </p>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
